@@ -18,7 +18,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    packages = ['kerasbeats'],
     python_requires=">=3.6",
-    install_requires = ['keras']
+    install_requires = ['keras', 'tensorflow', 'pandas', 'numpy']
 )
