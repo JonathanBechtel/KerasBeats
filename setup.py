@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="keras-beats-jonathan-bechtel",
-    version="0.0.4",
+    version="0.0.6",
     author="Jonathan Bechtel",
     author_email="jonathan@jonathanbech.tel",
     description="Lightweight installation of NBeats NN architecture for keras",

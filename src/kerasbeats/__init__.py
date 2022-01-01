@@ -1,1 +1,1 @@
-from . import GenericBlock, TrendBlock, SeasonalBlock, NBeats
+from models import GenericBlock, TrendBlock, SeasonalBlock, NBeats
