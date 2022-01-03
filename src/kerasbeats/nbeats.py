@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
 """
-NBeats model that is articulated at the following paper:  
+NBeats model that is formalized in the following paper:  
     https://arxiv.org/abs/1905.10437
 """
 
 import numpy as np
-import torch as t
-import tensorflow as tf
 from tensorflow import keras
 import tensorflow.keras.backend as K
-from tensorflow.keras import Input
 from tensorflow.keras import Model
 
 ### DIFFERENT BLOCK LAYERS:  GENERIC, SEASONAL, TREND
@@ -30,7 +26,8 @@ class GenericBlock(keras.layers.Layer):
             num_neurons: int -> How many layers to put into each Dense layer in
                                 the generic block
             ----
-            block_layers: int -> How many Dense layers to add to the block"""
+            block_layers: int -> How many Dense layers to add to the block
+        """
             
         # collection of layers in the block    
         self.layers_       = [keras.layers.Dense(num_neurons, activation = 'relu') 
@@ -178,6 +175,7 @@ class SeasonalBlock(keras.layers.Layer):
         forecast               = forecast_harmonics_sin + forecast_harmonics_cos
         return backcast, forecast
     
+### CREATES NESTED LAYERS INTO A SINGLE NBEATS LAYER
 class NBeats(keras.layers.Layer):
     def __init__(self,
                  model_type           = 'generic',
@@ -278,3 +276,122 @@ class NBeats(keras.layers.Layer):
             residuals = keras.layers.Subtract()([residuals, backcast])
             forecast  = keras.layers.Add()([forecast, block_forecast])
         return forecast
+    
+### BUILDS AND COMPILES 
+class NBeatsModel():
+    
+    def __init__(self, 
+                 model_type:str           = 'generic',
+                 lookback:int             = 7,
+                 forecast_size:int        = 1,
+                 num_generic_neurons:int  = 512,
+                 num_generic_stacks:int   = 30,
+                 num_generic_layers:int   = 4,
+                 num_trend_neurons:int    = 256,
+                 num_trend_stacks:int     = 3,
+                 num_trend_layers:int     = 4,
+                 num_seasonal_neurons:int = 2048,
+                 num_seasonal_stacks:int  = 3,
+                 num_seasonal_layers:int  = 4,
+                 num_harmonics:int        = 1,
+                 polynomial_term:int      = 3,
+                 loss:str                 = 'mae',
+                 learning_rate:float      = 0.001,
+                 batch_size: int          = 1024):
+        """Model used to create and initialize N-Beats model described in the following paper: 
+           https://arxiv.org/abs/1905.10437
+        
+        Arguments (default listed in parentheses)
+        -----------------------------------
+        model: str -> what model architecture to use.  Must be one of ['generic', 'interpretable']
+        ----
+        lookback: int ->  what multiplier of the forecast size you want to use for your training window.
+                              This number will be multiplied by the size of the forecast_size argument to get 
+                              your training window size.  For example, if your forecast size is 3, and your lookback
+                              is 4, your training window will be 4 * 3 = 12
+        ----
+        forecast_size: int -> How many steps into the future you want your model to predict.
+        ----
+        num_generic_neurons: int -> The number of neurons (columns) you want in each Dense layer for the generic block
+        ----
+        num_generic_stacks: int -> How many generic blocks to connect together
+        ----
+        num_generic_layers: int -> Within each generic block, how many dense layers do you want each one to have.  If
+                                   you set this number to 4, and num_generic_neurons to 128, then you will have 4 Dense
+                                   layers with 128 neurons in each one
+        ----
+        num_trend_neurons: int  -> Number of neurons to place within each Dense layer in each trend block
+        ----
+        num_trend_stacks: int -> number of trend blocks to stack on top of
+                             one another
+        ----
+        num_trend_layers: int -> number of Dense layers inside a trend block
+        ----
+        num_seasonal_neurons: int -> size of Dense layer in seasonal block
+        ----
+        num_seasonal_stacks: int -> number of seasonal blocks to stack on top
+                             on top of one another
+        ----
+        num_seasonal_layers: int -> number of Dense layers inside a seasonal
+                             block
+        ----
+        num_harmonics: int -> seasonal term to use for seasonal stack
+        ----
+        polynomial_term: int -> size of polynomial expansion for trend block  
+        ----
+        loss: str -> what loss function to use inside keras.  accepts any
+                     regression loss function built into keras.  You can find
+                     more info here:  https://keras.io/api/losses/regression_losses/
+        ----
+        learning_rate: float -> learning rate to use when training the model
+        ----
+        batch_size: int -> batch size to use when training the model
+        """
+        self.model_type           = model_type
+        self.lookback             = lookback
+        self.forecast_size        = forecast_size
+        self.num_generic_neurons  = num_generic_neurons
+        self.num_generic_stacks   = num_generic_stacks
+        self.num_generic_layers   = num_generic_layers
+        self.num_trend_neurons    = num_trend_neurons
+        self.num_trend_stacks     = num_trend_stacks
+        self.num_trend_layers     = num_trend_layers
+        self.num_seasonal_neurons = num_seasonal_neurons
+        self.num_seasonal_stacks  = num_seasonal_stacks
+        self.num_seasonal_layers  = num_seasonal_layers
+        self.num_harmonics        = num_harmonics
+        self.polynomial_term      = polynomial_term
+        self.loss                 = loss
+        self.learning_rate        = learning_rate
+        self.batch_size           = batch_size
+        
+    def build_layer(self):
+        """Initializes the Nested NBeats layer from initial parameters"""
+        self.model_layer = NBeats(**self.__dict__)
+        return self
+        
+    def build_model(self):
+        """Creates keras model to use for fitting"""
+        inputs     = keras.layers.Input(shape = (self.forecast_size * self.lookback, ), dtype = 'float')
+        forecasts  = self.model_layer(inputs)
+        self.model = Model(inputs, forecasts)
+        return self
+        
+    def fit(self, X, y, **kwargs):
+        """Build and fit model"""
+        self.build_layer()
+        self.build_model()
+        self.model.compile(optimizer = keras.optimizers.Adam(self.learning_rate), 
+                           loss      = [self.loss],
+                           metrics   = ['mae', 'mape'])
+        self.model.fit(X, y, batch_size = self.batch_size, **kwargs)
+        return self
+        
+    def predict(self, X, **kwargs):
+        """Passes predictions back to original keras layer"""
+        return self.model.predict(X, **kwargs)
+    
+    
+    def evaluate(self, y_true, y_pred, **kwargs):
+        """Passes predicted and true labels back to the original keras model"""
+        return self.model.evaluate(y_true, y_pred, **kwargs)
