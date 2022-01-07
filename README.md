@@ -7,9 +7,9 @@ An easy, accessible way to use the NBeats model architecture in Keras.
  **Table of Contents:**
    - [Introduction](###Introduction)
    - [Installation](###Installation)
-   - [Basic Usage](###Basic Usage)
-   - [KerasBeats layer](###KerasBeats layer)
-   - [KerasBeats as keras model](###KerasBeats as keras model)
+   - [Basic Usage](###Basic%20Usage)
+   - [KerasBeats layer](###KerasBeats%20layer)
+   - [KerasBeats as keras model](###KerasBeats%20as%20keras%20model)
 
 ### Introduction
 Introduction goes here.
