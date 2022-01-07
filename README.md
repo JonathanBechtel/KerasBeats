@@ -4,7 +4,7 @@ An easy, accessible way to use the NBeats model architecture in Keras.
 
 [kerasbeats]: https://raw.githubusercontent.com/JonathanBechtel/KerasBeats/main/common/images/nbeats.PNG "N-Beats Model Architecture"
 
- * Table of Contents
+ #### Table of Contents
    - Introduction
    - Installation
    - Basic Usage
