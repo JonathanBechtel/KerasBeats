@@ -27,7 +27,7 @@ kerasbeats can be installed with the following line:
 
 ### Basic Usage
 
-The N-Beats model architecture assumes that you take a univariate time series and create training data that contains previous values for an observation at a particular point in time.  For example, let's assume you have the followin very simple univariate time series:
+The N-Beats model architecture assumes that you take a univariate time series and create training data that contains previous values for an observation at a particular point in time.  For example, let's assume you have the following univariate time series:
 
 ```
 # sample time series values
@@ -127,7 +127,34 @@ array([[5],
  This function will perform the `prep_time_series` function for each unique value specified in the `label_col` column and then concatenate them together in the end, and you can then pass `windows` and `labels` into the `NBeatsModel`.
      
 ### KerasBeats layer
-Data goes here.
+The `NBeatsModel` is an abstraction over a functional keras model.  You may just want to use the underlying keras primitives in your own work without the very top of the model itself.  
+
+The basic building block of `kerasbeats` is a custom keras layer that contains all of the N-Beats blocks stacked together.  If you want access to this layer directly you can call the `build_layer` method:
+
+```
+from kerasbeats import NBeatsModel
+model = NBeatsModel()
+model.build_layer()
+```
+This exposes the `layer` attribute, which is a keras layer that can be re-used in larger, multi-faceted models if you would like.
 
 ### KerasBeats as keras model
-Data goes here.
+Likewise, you may want to access some underlying keras functionality that's not directly available in `NBeatsModel`.  In particular, when you call `fit` using the `NBeatsModel` wrapper, the `compile` step is done for you automatically.  
+
+However, if you wanted to define your own separate loss functions, or define callbacks, you can access the fully built keras model in the following way:
+
+```
+nbeats = NBeatsModel()
+nbeats.build_layer()
+nbeats.build_model()
+```
+After these two lines, you can access the `model` attribute, which will give you access to the full keras model.
+
+So if you wanted to specify a different loss function or optimizer, you could do so easily:
+
+```
+nbeats.model.compile(loss = 'mse',
+                     optimizer = tf.keras.optimizers.RMSProp(0.001))
+nbeats.model.fit(windows, labels)
+```
+Please note that if you want to use the underlying keras model directly, you should use `nbeats.model.fit()` and not `nbeats.fit`, since it will try and compile the model for you automatically after you call it.
