@@ -4,8 +4,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name= "keras-beats-jonathan-bechtel",
-    version= "0.0.10",
+    name= "keras-beats",
+    version= "0.0.1",
     author= "Jonathan Bechtel",
     author_email= "jonathan@jonathanbech.tel",
     description= "Lightweight installation of NBeats NN architecture for keras",
@@ -20,5 +20,5 @@ setuptools.setup(
     package_dir={"": "src"},
     packages = ['kerasbeats'],
     python_requires=">=3.6",
-    install_requires = ['keras', 'tensorflow', 'pandas', 'numpy']
+    install_requires = ['tensorflow >= 2.0.0', 'pandas', 'numpy']
 )
