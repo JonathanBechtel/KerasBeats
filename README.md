@@ -1,5 +1,8 @@
-# KerasBeats <sub>An easy, accessible way to use the NBeats model architecture in Keras.</sub>
+# KerasBeats
 ----
-This is a simple example package. You can use
-[Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
-to write your content.
+An easy, accessible way to use the NBeats model architecture in Keras.
+
+[logo]: https://github.com/JonathanBechtel/KerasBeats/raw/src/common/images/nbeats.png "N-Beats Model Architecture"
+
+### Table of Contents
+
