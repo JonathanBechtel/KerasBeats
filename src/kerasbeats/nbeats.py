@@ -12,15 +12,15 @@ from tensorflow.keras import Model
 class GenericBlock(keras.layers.Layer):
     def __init__(self, 
                  lookback      = 7,
-                 forecast_size = 1, 
+                 horizon       = 1, 
                  num_neurons   = 512,
                  block_layers  = 4):
         super(GenericBlock, self).__init__()
         """Generic Block for Nbeats model.  Inputs:  
-            lookback: int -> Multiplier you use for forecast_size to determine
+            lookback: int -> Multiplier you use for horizon to determine
                              how big your training window is
             ----
-            forecast_size: int -> How far out into the future you would like
+            horizon:  int -> How far out into the future you would like
                              your predictions to be
             ----
             num_neurons: int -> How many layers to put into each Dense layer in
@@ -33,10 +33,10 @@ class GenericBlock(keras.layers.Layer):
         self.layers_       = [keras.layers.Dense(num_neurons, activation = 'relu') 
                               for _ in range(block_layers)]
         self.lookback      = lookback
-        self.forecast_size = forecast_size
+        self.horizon       = horizon
         
         # multiply lookback * forecast to get training window size
-        self.backcast_size = forecast_size * lookback
+        self.backcast_size = horizon * lookback
         
         # numer of neurons to use for theta layer -- this layer
         # provides values to use for backcast + forecast in subsequent layers
@@ -56,21 +56,21 @@ class GenericBlock(keras.layers.Layer):
         # connect to Theta layer
         x = self.theta(x)
         # return backcast + forecast without any modifications
-        return x[:, :self.backcast_size], x[:, -self.forecast_size:]
+        return x[:, :self.backcast_size], x[:, -self.horizon:]
     
 class TrendBlock(keras.layers.Layer):
     def __init__(self, 
                  lookback        = 7,
-                 forecast_size   = 1,
+                 horizon         = 1,
                  num_neurons     = 512,
                  block_layers    = 4, 
                  polynomial_term = 2):
         super(TrendBlock, self).__init__()
         """Generic Block for Nbeats model.  Inputs:  
-            lookback: int -> Multiplier you use for forecast_size to determine
+            lookback: int -> Multiplier you use for horizon to determine
                              how big your training window is
             ----
-            forecast_size: int -> How far out into the future you would like
+            horizon: int -> How far out into the future you would like
                              your predictions to be
             ----
             num_neurons: int -> How many layers to put into each Dense layer in
@@ -86,15 +86,15 @@ class TrendBlock(keras.layers.Layer):
                                                    activation = 'relu') 
                                 for _ in range(block_layers)]
         self.lookback        = lookback
-        self.forecast_size   = forecast_size
+        self.horizon         = horizon
         self.theta_size      = 2 * (self.polynomial_size)
-        self.backcast_size   = lookback * forecast_size
+        self.backcast_size   = lookback * horizon
         self.theta           = keras.layers.Dense(self.theta_size, 
                                                   use_bias = False, 
                                                   activation = None)
         # taken from equation (2) in paper
-        self.forecast_time   = K.concatenate([K.pow(K.arange(forecast_size, 
-                                                             dtype = 'float') / forecast_size, i)[None, :]
+        self.forecast_time   = K.concatenate([K.pow(K.arange(horizon, 
+                                                             dtype = 'float') / horizon, i)[None, :]
                                  for i in range(self.polynomial_size)], axis = 0)
         self.backcast_time   = K.concatenate([K.pow(K.arange(self.backcast_size, 
                                                              dtype = 'float') / self.backcast_size, i)[None, :]
@@ -113,16 +113,16 @@ class TrendBlock(keras.layers.Layer):
 class SeasonalBlock(keras.layers.Layer):
     def __init__(self, 
                  lookback      = 7,
-                 forecast_size = 1,
+                 horizon       = 1,
                  num_neurons   = 512,
                  block_layers  = 4,
                  num_harmonics = 1):
-        super(SeasonalBlock).__init__()
+        super(SeasonalBlock, self).__init__()
         """Seasonality Block for Nbeats model.  Inputs:  
-            lookback: int -> Multiplier you use for forecast_size to determine
+            lookback: int -> Multiplier you use for horizon to determine
                              how big your training window is
             ----
-            forecast_size: int -> How far out into the future you would like
+            horizon: int -> How far out into the future you would like
                              your predictions to be
             ----
             num_neurons: int -> How many layers to put into each Dense layer in
@@ -136,20 +136,20 @@ class SeasonalBlock(keras.layers.Layer):
                                                  activation = 'relu') 
                               for _ in range(block_layers)]
         self.lookback      = lookback
-        self.forecast_size = forecast_size
+        self.horizon       = horizon
         self.num_harmonics = num_harmonics
-        self.theta_size    = 4 * int(np.ceil(num_harmonics / 2 * forecast_size) - (num_harmonics - 1))
-        self.backcast_size = lookback * forecast_size
+        self.theta_size    = 4 * int(np.ceil(num_harmonics / 2 * horizon) - (num_harmonics - 1))
+        self.backcast_size = lookback * horizon
         self.theta         = keras.layers.Dense(self.theta_size, 
                                                 use_bias = False, 
                                                 activation = None)
         self.frequency     = K.concatenate((K.zeros(1, dtype = 'float'), 
-                             K.arange(num_harmonics, num_harmonics / 2 * forecast_size) / num_harmonics), 
+                             K.arange(num_harmonics, num_harmonics / 2 * horizon) / num_harmonics), 
                              axis = 0)
 
         self.backcast_grid = -2 * np.pi * (K.arange(self.backcast_size, dtype = 'float')[:, None] / self.backcast_size) * self.frequency
 
-        self.forecast_grid = 2 * np.pi * (K.arange(forecast_size, dtype=np.float32)[:, None] / forecast_size) * self.frequency
+        self.forecast_grid = 2 * np.pi * (K.arange(horizon, dtype=np.float32)[:, None] / horizon) * self.frequency
 
         self.backcast_cos_template  = K.transpose(K.cos(self.backcast_grid))
 
@@ -180,7 +180,7 @@ class NBeats(keras.layers.Layer):
     def __init__(self,
                  model_type           = 'generic',
                  lookback             = 7,
-                 forecast_size        = 1,
+                 horizon              = 1,
                  num_generic_neurons  = 512,
                  num_generic_stacks   = 30,
                  num_generic_layers   = 4,
@@ -198,10 +198,10 @@ class NBeats(keras.layers.Layer):
             model_type: str -> type of architecture to use.  Must be one of
                                ['generic', 'interpretable']
             ----
-            lookback: int -> Multiplier you use for forecast_size to determine
+            lookback: int -> Multiplier you use for horizon to determine
                              how big your training window is
             ----
-            forecast_size: int -> How far out into the future you would like
+            horizon: int -> How far out into the future you would like
                              your predictions to be
             ----
             num_generic_neurons: int -> size of dense layers in generic block
@@ -233,7 +233,7 @@ class NBeats(keras.layers.Layer):
             """
         self.model_type           = model_type
         self.lookback             = lookback
-        self.forecast_size        = forecast_size
+        self.horizon              = horizon
         self.num_generic_neurons  = num_generic_neurons
         self.num_generic_stacks   = num_generic_stacks
         self.num_generic_layers   = num_generic_layers
@@ -251,18 +251,19 @@ class NBeats(keras.layers.Layer):
         # default values set from page 26, Table 18 from paper
         if model_type == 'generic':
             self.blocks_ = [GenericBlock(lookback       = lookback, 
-                                         forecast_size  = forecast_size,
+                                         horizon        = horizon,
                                          num_neurons    = num_generic_neurons, 
                                          block_layers   = num_generic_layers)
                              for _ in range(num_generic_stacks)]
         if model_type == 'interpretable':
             self.blocks_ = [TrendBlock(lookback         = lookback,
-                                       forecast_size    = forecast_size,
+                                       horizon          = horizon,
                                        num_neurons      = num_trend_neurons,
                                        block_layers     = num_trend_layers, 
-                                       polynomial_term  = polynomial_term)] + [
+                                       polynomial_term  = polynomial_term)
+                            for _ in range(num_trend_stacks)] + [
                             SeasonalBlock(lookback      = lookback,
-                                          forecast_size = forecast_size,
+                                          horizon       = horizon,
                                           num_neurons   = num_seasonal_neurons,
                                           block_layers  = num_seasonal_layers,
                                           num_harmonics = num_harmonics)
@@ -283,7 +284,7 @@ class NBeatsModel():
     def __init__(self, 
                  model_type:str           = 'generic',
                  lookback:int             = 7,
-                 forecast_size:int        = 1,
+                 horizon:int              = 1,
                  num_generic_neurons:int  = 512,
                  num_generic_stacks:int   = 30,
                  num_generic_layers:int   = 4,
@@ -306,11 +307,11 @@ class NBeatsModel():
         model: str -> what model architecture to use.  Must be one of ['generic', 'interpretable']
         ----
         lookback: int ->  what multiplier of the forecast size you want to use for your training window.
-                              This number will be multiplied by the size of the forecast_size argument to get 
+                              This number will be multiplied by the size of the horizon argument to get 
                               your training window size.  For example, if your forecast size is 3, and your lookback
                               is 4, your training window will be 4 * 3 = 12
         ----
-        forecast_size: int -> How many steps into the future you want your model to predict.
+        horizon: int -> How many steps into the future you want your model to predict.
         ----
         num_generic_neurons: int -> The number of neurons (columns) you want in each Dense layer for the generic block
         ----
@@ -349,7 +350,7 @@ class NBeatsModel():
         """
         self.model_type           = model_type
         self.lookback             = lookback
-        self.forecast_size        = forecast_size
+        self.horizon              = horizon
         self.num_generic_neurons  = num_generic_neurons
         self.num_generic_stacks   = num_generic_stacks
         self.num_generic_layers   = num_generic_layers
@@ -372,7 +373,7 @@ class NBeatsModel():
         
     def build_model(self):
         """Creates keras model to use for fitting"""
-        inputs     = keras.layers.Input(shape = (self.forecast_size * self.lookback, ), dtype = 'float')
+        inputs     = keras.layers.Input(shape = (self.horizon * self.lookback, ), dtype = 'float')
         forecasts  = self.model_layer(inputs)
         self.model = Model(inputs, forecasts)
         return self
