@@ -2,7 +2,11 @@
 ----
 An easy, accessible way to use the NBeats model architecture in Keras.
 
-[logo]: https://github.com/JonathanBechtel/KerasBeats/raw/src/common/images/nbeats.png "N-Beats Model Architecture"
+[logo]: https://raw.githubusercontent.com/JonathanBechtel/KerasBeats/main/common/images/nbeats.PNG "N-Beats Model Architecture"
 
-### Table of Contents
-
+ * Table of Contents
+ *  - Introduction
+ *  - Installation
+ *  - Basic Usage
+ *  - Using KerasBeats As a Layer
+ *  - Using KerasBeats as a whole keras model
