@@ -43,12 +43,14 @@ X = [[1, 2],
      [2, 3],
      [3, 4]]
      
-y = [[3, 4, 5]
-]```
+y = [[3], 
+     [4], 
+     [5]]
+```
 
 The idea here is that `[1, 2]` were the two values that preceded `3`, `[2, 3]` were the two that preceeded `4`, and so on.  
 
-Once your input data is formatted like this then you can use `kerasbeats` in the followin way:
+Once your input data is formatted like this then you can use `kerasbeats` in the following way:
 
 ```
 from kerasbeats import NBeatsModel
@@ -56,21 +58,25 @@ mod = NBeatsModel()
 mod.fit(X, y)
 ```
 
-When you are finished fitting your model you can use the `predict` and `evaluate` methods, which are just wrappers on the original keras methods, and would work in exactly the same way.
+When you are finished fitting your model you can use the `predict` and `evaluate` methods, which are just wrappers on the original keras methods, and would work in the same way.
 
 ### Data Prep
-Most time series data typically comes in column format, so a little data prep is usually needed before you can feed it into `kerasbeats`, you can easily do this yourself, but there are some built in functions in the `kerasbeats` package to make this a little easier.  
+Most time series data typically comes in column format, so a little data prep is usually needed before you can feed it into `kerasbeats`. You can easily do this yourself, but there are some built in functions in the `kerasbeats` package to make this a little easier.  
 
+#### Univariate Time Series Data
 If you have a single time series, you can use the `prep_time_series` function to get your data in the appropriate format.  It works like this:
 
-```from kerasbeats import prep_time_series
-# sample data:  a mock time series with twenty values
+```
+from kerasbeats import prep_time_series
+# sample data:  a mock time series with ten values
 time_vals = np.arange(10)
-windows, labels = prep_time_series(lookback = 5, horizon = 1)```
+windows, labels = prep_time_series(lookback = 5, horizon = 1)
+```
 
 Once you are done with this the value of `windows` will be the following numpy array:
 
 ```
+# training window of 5 values
 array([[0, 1, 2, 3, 4],
        [1, 2, 3, 4, 5],
        [2, 3, 4, 5, 6],
@@ -81,12 +87,44 @@ array([[0, 1, 2, 3, 4],
 The value of `labels` will be the following numpy array:
 
 ```
+# the value that followed the preceeding 5
 array([[5],
        [6],
        [7],
        [8],
        [9]])
  ```
+ This method accepts numpy arrays, lists, and pandas Series and DataFrames as input, but they must be one column if they are not then you'll receive an error message.
+ 
+ The function contains two separate arguments:
+ 
+  - **horizon:** how far out into the future you want to predict.  A horizon value of 1 means you are predicting one step ahead. A value of two means you are predicting two steps ahead, and so on
+  - **lookback:** what multiple of the `horizon` you want to use for training data.  So if `horizon` is 1 and `lookback` is 5, your training window will be the previous 5 values.  If `horizon` is 2 and `lookback` is 5, then your training window will be the previous 10 values.
+ 
+ #### Multivariate Time Series Data
+ 
+ You could conceivably use `kerasbeats` to learn a combination of time series jointly, assuming they shared common patterns between them.  
+ 
+ For example, here's a simple dataset that contains two different time series in a dataframe:
+ 
+ ```
+ import pandas as pd
+ 
+ df = pd.DataFrame()
+ df['label'] = ['a'] * 10 + ['b'] * 10
+ df['value'] = [i for i in range(10)] * 2
+ ```
+ 
+ `df` would look like this in a jupyter notebook:
+ ![sample df](common/images/sample_df.PNG "sample dataframe")
+ 
+ This contains two separate time series, one for value `a`, and another for value `b`.  If you want to prep your data so each time series for each label is turned into its corresponding training windows and labels you can use the `prep_multiple_time_series` function:
+ 
+ ```
+ from kerasbeats import prep_multiple_time_series
+ windows, labels = prep_multiple_time_series(df, label_col = 'label', data_col = 'value', lookback = 5, horizon = 2)
+ ```
+ This function will perform the `prep_time_series` function for each unique value specified in the `label_col` column and then concatenate them together in the end, and you can then pass `windows` and `labels` into the `NBeatsModel`.
      
 ### KerasBeats layer
 Data goes here.
