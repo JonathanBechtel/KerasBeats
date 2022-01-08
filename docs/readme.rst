@@ -2,7 +2,7 @@
 ----
 An easy, accessible way to use the NBeats model architecture in Keras.
 
-![kerasbeats](common/images/nbeats.PNG "N-Beats Model Architecture")
+![kerasbeats](../common/images/nbeats.PNG "N-Beats Model Architecture")
 
  **Table of Contents:**
    - [Introduction](###Introduction)
