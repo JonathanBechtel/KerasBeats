@@ -26,7 +26,8 @@ Basic Usage
 The N-Beats model architecture assumes that you take a univariate time series and create training data that contains previous values for an observation at a particular point in time.  For example, let's assume you have the following univariate time series:
 
 ::
-    # sample time series values
+
+    # sample time series values!
     time_vals = [1, 2, 3, 4, 5]
 
 If you were predicting one period ahead and wanted to use the previous two values in the time series as input, you want your data to be formatted like this:
