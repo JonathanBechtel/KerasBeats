@@ -16,21 +16,18 @@ def prep_time_series(data,
     Creates windows and their corresponding labels for each unique time series
     in a dataset
     
-    E.g. if horizon = 2 and lookback = 3 (default)
-    Input: [1, 2, 3, 4, 5, 6, 7] -> Output: ([1, 2, 3, 4, 5, 6], [7])
+    E.g. if horizon = 2 and lookback = 3
+    Input: [1, 2, 3, 4, 5, 6, 7, 8] -> Output: ([1, 2, 3, 4, 5, 6], [7, 8])
+    
+    Training window goes back by 3 * 2 values
     
     inputs:
         
-        :param data:  univariate time series you want to create windows for.  Can be 
-        pandas dataframe, numpy array or list
-        :param lookback:  multiple of forecast horizon that you want to use for
-        training window
+        :param data:  univariate time series you want to create windows for.  Can be pandas dataframe, numpy array or list
+        :param lookback:  multiple of forecast horizon that you want to use for training window
         :param horizon: how far out into the future you want to predict
         
-    :returns: numpy array of shape (len(data) - lookback * horizon + horizon, 
-                                  lookback * horizon)
-    and numpy array of shape (len(data) - lookback * horizon + horizon, 
-                              lookback * horizon)
+    :returns: tuple with data types: (np.ndarray, np.ndarray) containing training windows and labels
     """
     
     ### convert data into numpy array, if necessary
