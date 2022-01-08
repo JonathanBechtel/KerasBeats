@@ -3,7 +3,7 @@ import sys, os
 sys.path.append('src/kerasbeats')
 
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.todo',
-              'sphinx.ext.coverage', 'sphinx.ext.pngmath', 'sphinx.ext.ifconfig',
+              'sphinx.ext.coverage', 'sphinx.ext.ifconfig',
               'epub2', 'mobi', 'autoimage', 'code_example']
 
 todo_include_todos = True
