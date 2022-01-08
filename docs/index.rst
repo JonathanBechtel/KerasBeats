@@ -120,6 +120,7 @@ For example, here's a simple dataset that contains two different time series in 
      df['value'] = [i for i in range(10)] * 2
  
 :code:`df` would look like this in a jupyter notebook:
+
 .. image:: https://raw.githubusercontent.com/JonathanBechtel/KerasBeats/main/common/images/sample_df.PNG
  
 This contains two separate time series, one for value :code:`a`, and another for value :code:`b`.  If you want to prep your data so each time series for each label is turned into its corresponding training windows and labels you can use the :code:`prep_multiple_time_series` function:
