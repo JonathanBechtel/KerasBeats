@@ -188,3 +188,5 @@ prep_time_series
 
 prep_multiple_time_series
 #########################
+.. module:: utilities
+.. autofunction:: prep_multiple_time_series
