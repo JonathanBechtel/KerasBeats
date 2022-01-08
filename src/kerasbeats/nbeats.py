@@ -398,8 +398,8 @@ class NBeatsModel():
         Passes inputs back to original keras model for prediction
         
         inputs:
-          :param X: tensor of numpy array with input data
-          :param kwargs: any additional arguments you'd like to pass to the base keras model
+          :X: tensor of numpy array with input data
+          :kwargs: any additional arguments you'd like to pass to the base keras model
           
         :returns: numpy array that contains model predictions for each sample
         """
@@ -411,9 +411,9 @@ class NBeatsModel():
         Passes predicted and true labels back to the original keras model
         
         inputs:
-            :param y_true: numpy array or tensorflow with true labels
-            :param y_pred: numpy array or tensorflow with predicted labels
-            :param kwargs: any additional arguments you'd like to pass to the base keras model
+            :y_true: numpy array or tensorflow with true labels
+            :y_pred: numpy array or tensorflow with predicted labels
+            :kwargs: any additional arguments you'd like to pass to the base keras model
         
         :returns: list with specified evaluation metrics
         """
