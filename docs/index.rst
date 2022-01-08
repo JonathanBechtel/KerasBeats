@@ -203,3 +203,8 @@ prep_multiple_time_series
 #########################
 .. module:: utilities
 .. autofunction:: prep_multiple_time_series
+
+Additional Help
+---------------
+
+If you would like this work extended in areas that are specific to your enterprise, you may submit a request `here <www.jonathanbech.tel/contact>`_:
