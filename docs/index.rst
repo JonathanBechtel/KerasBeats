@@ -172,5 +172,19 @@ So if you wanted to specify a different loss function or optimizer, you could do
 
 Please note that if you want to use the underlying keras model directly, you should use :code:`nbeats.model.fit()` and not :code:`nbeats.fit`, since it will try and compile the model for you automatically after you call it.
 
-Potential Sublayer
-##################
+API Reference
+-------------
+
+The following sections describe the different functions and classes available in :code:`kerasbeats`
+
+NBeatsModel
+###########
+
+prep_time_series
+################
+
+.. currentmodule:: utilities
+.. autofunction:: prep_time_series
+
+prep_multiple_time_series
+#########################
