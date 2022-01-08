@@ -4,7 +4,7 @@ An easy, accessible way to use the NBeats model architecture in Keras.
 
 Official documenation for the package can be found here:  https://kerasbeats.readthedocs.io/en/latest/
 
-Developer website can be found here:  https://www.jonathanbech.tel/contact
+Developer website can be found here:  https://www.jonathanbech.tel
 
 ![kerasbeats](common/images/nbeats.PNG "N-Beats Model Architecture")
 
