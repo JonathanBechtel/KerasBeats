@@ -21,13 +21,13 @@ def prep_time_series(data,
     
     inputs:
         
-        data:  univariate time series you want to create windows for.  Can be 
+        :param data:  univariate time series you want to create windows for.  Can be 
         pandas dataframe, numpy array or list
-        lookback:  multiple of forecast horizon that you want to use for
+        :param lookback:  multiple of forecast horizon that you want to use for
         training window
-        horizon: how far out into the future you want to predict
+        :param horizon: how far out into the future you want to predict
         
-    returns numpy array of shape (len(data) - lookback * horizon + horizon, 
+    :returns: numpy array of shape (len(data) - lookback * horizon + horizon, 
                                   lookback * horizon) (training windows)
     and numpy array of shape (len(data) - lookback * horizon + horizon, 
                               lookback * horizon)
