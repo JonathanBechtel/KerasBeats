@@ -28,7 +28,7 @@ def prep_time_series(data,
         :param horizon: how far out into the future you want to predict
         
     :returns: numpy array of shape (len(data) - lookback * horizon + horizon, 
-                                  lookback * horizon) (training windows)
+                                  lookback * horizon)
     and numpy array of shape (len(data) - lookback * horizon + horizon, 
                               lookback * horizon)
     """
