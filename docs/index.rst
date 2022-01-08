@@ -63,8 +63,8 @@ Data Prep
 
 Most time series data typically comes in column format, so a little data prep is usually needed before you can feed it into :code:`kerasbeats`. You can easily do this yourself, but there are some built in functions in the :code:`kerasbeats` package to make this a little easier.  
 
-Univariate Time Series Data
----------------------------
+Univariate Time Series
+----------------------
 
 If you have a single time series, you can use the :code:`prep_time_series` function to get your data in the appropriate format.  It works like this:
 
@@ -104,8 +104,8 @@ The function contains two separate arguments:
  - **horizon:** how far out into the future you want to predict.  A horizon value of 1 means you are predicting one step ahead. A value of two means you are predicting two steps ahead, and so on
  - **lookback:** what multiple of the `horizon` you want to use for training data.  So if `horizon` is 1 and `lookback` is 5, your training window will be the previous 5 values.  If `horizon` is 2 and `lookback` is 5, then your training window will be the previous 10 values.
  
-Multivariate Time Series Data
------------------------------
+Multiple Time Series
+--------------------
  
 You could conceivably use `kerasbeats` to learn a combination of time series jointly, assuming they shared common patterns between them.  
  
