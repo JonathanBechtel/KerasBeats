@@ -20,5 +20,5 @@ setuptools.setup(
     package_dir={"": "src"},
     packages = ['kerasbeats'],
     python_requires=">=3.6",
-    install_requires = ['tensorflow >= 2.0.0', 'pandas', 'numpy']
+    install_requires = ['tensorflow>=2.0.0', 'pandas', 'numpy']
 )
