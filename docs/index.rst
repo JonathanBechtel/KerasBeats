@@ -183,6 +183,8 @@ NBeatsModel
 .. module:: nbeats
 .. autoclass:: NBeatsModel
    :members:
+   
+   .. automethod:: __init__
 
 prep_time_series
 ################
