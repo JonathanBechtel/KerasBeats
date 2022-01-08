@@ -302,51 +302,26 @@ class NBeatsModel():
         """Model used to create and initialize N-Beats model described in the following paper: 
            https://arxiv.org/abs/1905.10437
         
-        Arguments (default listed in parentheses)
-        -----------------------------------
-        model: str -> what model architecture to use.  Must be one of ['generic', 'interpretable']
-        ----
-        lookback: int ->  what multiplier of the forecast size you want to use for your training window.
-                              This number will be multiplied by the size of the horizon argument to get 
-                              your training window size.  For example, if your forecast size is 3, and your lookback
-                              is 4, your training window will be 4 * 3 = 12
-        ----
-        horizon: int -> How many steps into the future you want your model to predict.
-        ----
-        num_generic_neurons: int -> The number of neurons (columns) you want in each Dense layer for the generic block
-        ----
-        num_generic_stacks: int -> How many generic blocks to connect together
-        ----
-        num_generic_layers: int -> Within each generic block, how many dense layers do you want each one to have.  If
-                                   you set this number to 4, and num_generic_neurons to 128, then you will have 4 Dense
-                                   layers with 128 neurons in each one
-        ----
-        num_trend_neurons: int  -> Number of neurons to place within each Dense layer in each trend block
-        ----
-        num_trend_stacks: int -> number of trend blocks to stack on top of
-                             one another
-        ----
-        num_trend_layers: int -> number of Dense layers inside a trend block
-        ----
-        num_seasonal_neurons: int -> size of Dense layer in seasonal block
-        ----
-        num_seasonal_stacks: int -> number of seasonal blocks to stack on top
-                             on top of one another
-        ----
-        num_seasonal_layers: int -> number of Dense layers inside a seasonal
-                             block
-        ----
-        num_harmonics: int -> seasonal term to use for seasonal stack
-        ----
-        polynomial_term: int -> size of polynomial expansion for trend block  
-        ----
-        loss: str -> what loss function to use inside keras.  accepts any
-                     regression loss function built into keras.  You can find
-                     more info here:  https://keras.io/api/losses/regression_losses/
-        ----
-        learning_rate: float -> learning rate to use when training the model
-        ----
-        batch_size: int -> batch size to use when training the model
+        inputs:
+        :param model: what model architecture to use.  Must be one of ['generic', 'interpretable']
+        :param lookback:  what multiplier of the forecast size you want to use for your training window
+        :param horizon: how many steps into the future you want your model to predict
+        :param num_generic_neurons: The number of neurons (columns) you want in each Dense layer for the generic block
+        :param num_generic_stacks: How many generic blocks to connect together
+        :param num_generic_layers: Within each generic block, how many dense layers do you want each one to have.  If you set this number to 4, and num_generic_neurons to 128, then you will have 4 Dense layers with 128 neurons in each one
+        :param num_trend_neurons: Number of neurons to place within each Dense layer in each trend block
+        :param num_trend_stacks: number of trend blocks to stack on top of one another
+        :param num_trend_layers: number of Dense layers inside a trend block
+        :param num_seasonal_neurons: size of Dense layer in seasonal block
+        :param num_seasonal_stacks: number of seasonal blocks to stack on top on top of one another
+        :param num_seasonal_layers: number of Dense layers inside a seasonal block
+        :param num_harmonics: seasonal term to use for seasonal stack
+        :param polynomial_term: size of polynomial expansion for trend block
+        :param loss: what loss function to use inside keras.  accepts any regression loss function built into keras.  You can find more info here:  https://keras.io/api/losses/regression_losses/
+        :param learning_rate: learning rate to use when training the model
+        :param batch_size: batch size to use when training the model
+        
+        :returns: self
         """
         self.model_type           = model_type
         self.lookback             = lookback
