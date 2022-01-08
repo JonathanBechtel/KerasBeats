@@ -180,6 +180,9 @@ The following sections describe the different functions and classes available in
 NBeatsModel
 ###########
 
+.. module:: nbeats
+.. autoclass:: NBeatsModel
+
 prep_time_series
 ################
 
