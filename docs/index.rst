@@ -116,10 +116,10 @@ The value of `labels` will be the following numpy array:
  This contains two separate time series, one for value :code:`a`, and another for value :code:`b`.  If you want to prep your data so each time series for each label is turned into its corresponding training windows and labels you can use the :code:`prep_multiple_time_series` function:
  
  ::
- from kerasbeats import prep_multiple_time_series
- windows, labels = prep_multiple_time_series(df, label_col = 'label', data_col = 'value', lookback = 5, horizon = 2)
+     from kerasbeats import prep_multiple_time_series
+     windows, labels = prep_multiple_time_series(df, label_col = 'label', data_col = 'value', lookback = 5, horizon = 2)
 
- This function will perform the :code:`prep_time_series` function for each unique value specified in the :code:`label_col` column and then concatenate them together in the end, and you can then pass :code:`windows` and :code:`labels` into the :code:`NBeatsModel`.
+This function will perform the :code:`prep_time_series` function for each unique value specified in the :code:`label_col` column and then concatenate them together in the end, and you can then pass :code:`windows` and :code:`labels` into the :code:`NBeatsModel`.
      
 KerasBeats layer
 ----------------
@@ -129,6 +129,7 @@ The :code:`NBeatsModel` is an abstraction over a functional keras model.  You ma
 The basic building block of :code:`kerasbeats` is a custom keras layer that contains all of the N-Beats blocks stacked together.  If you want access to this layer directly you can call the :code:`build_layer` method:
 
 ::
+
     from kerasbeats import NBeatsModel
     model = NBeatsModel()
     model.build_layer()
