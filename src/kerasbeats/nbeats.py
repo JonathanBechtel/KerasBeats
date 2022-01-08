@@ -346,7 +346,8 @@ class NBeatsModel():
         """
         Initializes the Nested NBeats layer from initial parameters
         
-        :attributes model_layer: custom keras layer that contains all of the generic, seasonal and trend layers stacked toger
+        attributes:
+          :attributes model_layer: custom keras layer that contains all of the generic, seasonal and trend layers stacked toger
         
         :returns self:
         
@@ -358,9 +359,10 @@ class NBeatsModel():
         """
         Creates keras model to use for fitting
         
-        :attributes model: keras model that contains NBeats model layers as well as inputs, put into the keras Model class
+        attributes:
+          :attributes model: keras model that contains NBeats model layers as well as inputs, put into the keras Model class
         
-        :returns self:
+        :returns: self
         
         """
         inputs     = keras.layers.Input(shape = (self.horizon * self.lookback, ), dtype = 'float')
@@ -377,6 +379,7 @@ class NBeatsModel():
           :param y: tensor or numpy array with the target values to be predicted
           :param kwargs: any additional arguments you'd like to pass to the base keras model
           
+        attributes:
           :attribute model_layer: custom keras layer that contains nested Generic, Trend, and Seasonal NBeats blocks
           :attribute model: keras Model class that connects inputs to the model layer
           
