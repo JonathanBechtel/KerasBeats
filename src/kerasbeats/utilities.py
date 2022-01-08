@@ -61,7 +61,7 @@ def prep_multiple_time_series(data,
                              label_col: str,
                              data_col: str,
                              lookback: int = 7,
-                             horizon: int = 1):
+                             horizon: int = 1) -> (np.ndarray, np.ndarray):
     """
     Creates training windows for time series that are stacked on top of each 
     other
@@ -82,15 +82,13 @@ def prep_multiple_time_series(data,
         
     Arguments:
         
-        data:  pandas DataFrame that has at least two columns, one that are labels
-        for each unique time series in your dataset, and another that are the time
-        series values
+        :param data:  pandas DataFrame that has at least two columns, one that are labels for each unique time series in your dataset, and another that are the timeseries values
+        :param label_col: the name of the column that labels each time series
+        :param data_col:  the column that contains the time series values
+        :param lookback:  what multiple of your horizon you want your training data to be eg -- a horizon of 2 and lookback of 5 creates a training window of 10
+        :param horizon:   how far into the future you want to predict
         
-        label_col: the name of the column that labels each time series
-        data_col:  the column that contains the time series values
-        lookback:  what multiple of your horizon you want your training data to be
-                   eg -- a horizon of 2 and lookback of 5 creates a training window of 10
-        horizon:   how far into the future you want to predict
+        :returns: tuple with data types: (np.ndarray, np.ndarray) containing training windows and labels for the concatenated time series
     """
     # will be used to contain each unique time series inside the dataset
     ts_windows = []
