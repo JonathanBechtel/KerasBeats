@@ -175,7 +175,11 @@ Please note that if you want to use the underlying keras model directly, you sho
 API Reference
 -------------
 
-The following sections describe the different functions and classes available in :code:`kerasbeats`
+The following sections describe the different functions and classes available in :code:`kerasbeats`.  
+A few important notes:
+ - All of the default values are designed to mimic what was originally in the paper, but are not necessarily best for your project
+ - batch size and learning rate are parameters you can usually specify inside keras itself, but they are defined at initialization because these values were explicitly mentioned in the paper.  If you want to set them yourself, you should call :code:`NBeatsModel().build_layer().build_model()` in order to set these values yourself in keras directly.
+ - If you are going to use the interpretable model, you should probably set :code:`horizon` to at least 2.  Due to the way some other parameters are specified, the matrix math typically only works if you are predicting more than one day out.
 
 NBeatsModel
 ###########
