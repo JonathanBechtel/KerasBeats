@@ -1,6 +1,5 @@
-<<<<<<< HEAD:index.rst
-# KerasBeats
-----
+KerasBeats
+------------
 An easy, accessible way to use the NBeats model architecture in Keras.
 
 .. image:: https://raw.githubusercontent.com/JonathanBechtel/KerasBeats/main/common/images/nbeats.PNG
@@ -320,4 +319,3 @@ nbeats.model.compile(loss = 'mse',
 nbeats.model.fit(windows, labels)
 ```
 Please note that if you want to use the underlying keras model directly, you should use `nbeats.model.fit()` and not `nbeats.fit`, since it will try and compile the model for you automatically after you call it.
->>>>>>> 0adf113057559e5e7e8ac3e21ab46f570d080b0c:docs/readme.rst
