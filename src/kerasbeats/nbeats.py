@@ -300,8 +300,8 @@ class NBeatsModel():
                  learning_rate:float      = 0.001,
                  batch_size: int          = 1024):
         """
-        Model used to create and initialize N-Beats model described in the following paper: 
-           https://arxiv.org/abs/1905.10437
+        
+        Model used to create and initialize N-Beats model described in the following paper: https://arxiv.org/abs/1905.10437
         
         inputs:
           :param model: what model architecture to use.  Must be one of ['generic', 'interpretable']
@@ -349,7 +349,7 @@ class NBeatsModel():
         attributes:
           :attributes model_layer: custom keras layer that contains all of the generic, seasonal and trend layers stacked toger
         
-        :returns self:
+        :returns: self
         
         """
         self.model_layer = NBeats(**self.__dict__)
@@ -383,7 +383,7 @@ class NBeatsModel():
           :attribute model_layer: custom keras layer that contains nested Generic, Trend, and Seasonal NBeats blocks
           :attribute model: keras Model class that connects inputs to the model layer
           
-        :returns self:  
+        :returns: self  
         """
         self.build_layer()
         self.build_model()
