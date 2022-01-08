@@ -23,9 +23,9 @@ def prep_time_series(data,
     
     inputs:
         
-        :param data:  univariate time series you want to create windows for.  Can be pandas dataframe, numpy array or list
-        :param lookback:  multiple of forecast horizon that you want to use for training window
-        :param horizon: how far out into the future you want to predict
+        :data:  univariate time series you want to create windows for.  Can be pandas dataframe, numpy array or list
+        :lookback:  multiple of forecast horizon that you want to use for training window
+        :horizon: how far out into the future you want to predict
         
     :returns: tuple with data types: (np.ndarray, np.ndarray) containing training windows and labels
     """
@@ -82,11 +82,11 @@ def prep_multiple_time_series(data,
         
     inputs:
         
-        :param data:  pandas DataFrame that has at least two columns, one that are labels for each unique time series in your dataset, and another that are the timeseries values
-        :param label_col: the name of the column that labels each time series
-        :param data_col:  the column that contains the time series values
-        :param lookback:  what multiple of your horizon you want your training data to be eg -- a horizon of 2 and lookback of 5 creates a training window of 10
-        :param horizon:   how far into the future you want to predict
+        :data:  pandas DataFrame that has at least two columns, one that are labels for each unique time series in your dataset, and another that are the timeseries values
+        :label_col: the name of the column that labels each time series
+        :data_col:  the column that contains the time series values
+        :lookback:  what multiple of your horizon you want your training data to be eg -- a horizon of 2 and lookback of 5 creates a training window of 10
+        :horizon:   how far into the future you want to predict
         
     :returns: tuple with data types: (np.ndarray, np.ndarray) containing training windows and labels for the concatenated time series
     """
