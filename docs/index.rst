@@ -7,7 +7,7 @@ An easy, accessible way to use the NBeats model architecture in Keras.
 Introduction
 ------------
 
-The motivation for this project was to take the NBeats model architecture defined in the original paper here:  https://arxiv.org/abs/1905.10437 and reproduce it in a widely accessible form in keras.  In the past few years this model has become very popular as a timer series forecasting tool, but its implementation in keras seemed elusive, without an easy-to-use, well documented option online that'd be simple for newcomers to try. When you are looking to use a new tool for the first time, it's vital that you can do a simple install and quickly use an api syntax you are already familiar with to get started within minutes.  
+The motivation for this project was to take the NBeats model architecture defined in the original paper here:  https://arxiv.org/abs/1905.10437 and reproduce it in a widely accessible form in keras.  In the past few years this model has become very popular as a timer series forecasting tool, but its implementation in keras seemed elusive, without an easy-to-use, well documented option online that'd be simple for newcomers to try.   This package allows anyone with basic knowledge of keras to be able to quickly use NBeats in its generic and interpretable form with just a few function calls. 
 
 To that end, KerasBeats was built with the following ideas in mind:
  - It should reflect the original model architecture as closely as possible.
