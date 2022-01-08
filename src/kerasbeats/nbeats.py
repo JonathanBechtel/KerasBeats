@@ -299,27 +299,28 @@ class NBeatsModel():
                  loss:str                 = 'mae',
                  learning_rate:float      = 0.001,
                  batch_size: int          = 1024):
-        """Model used to create and initialize N-Beats model described in the following paper: 
+        """
+        Model used to create and initialize N-Beats model described in the following paper: 
            https://arxiv.org/abs/1905.10437
         
         inputs:
-        :param model: what model architecture to use.  Must be one of ['generic', 'interpretable']
-        :param lookback:  what multiplier of the forecast size you want to use for your training window
-        :param horizon: how many steps into the future you want your model to predict
-        :param num_generic_neurons: The number of neurons (columns) you want in each Dense layer for the generic block
-        :param num_generic_stacks: How many generic blocks to connect together
-        :param num_generic_layers: Within each generic block, how many dense layers do you want each one to have.  If you set this number to 4, and num_generic_neurons to 128, then you will have 4 Dense layers with 128 neurons in each one
-        :param num_trend_neurons: Number of neurons to place within each Dense layer in each trend block
-        :param num_trend_stacks: number of trend blocks to stack on top of one another
-        :param num_trend_layers: number of Dense layers inside a trend block
-        :param num_seasonal_neurons: size of Dense layer in seasonal block
-        :param num_seasonal_stacks: number of seasonal blocks to stack on top on top of one another
-        :param num_seasonal_layers: number of Dense layers inside a seasonal block
-        :param num_harmonics: seasonal term to use for seasonal stack
-        :param polynomial_term: size of polynomial expansion for trend block
-        :param loss: what loss function to use inside keras.  accepts any regression loss function built into keras.  You can find more info here:  https://keras.io/api/losses/regression_losses/
-        :param learning_rate: learning rate to use when training the model
-        :param batch_size: batch size to use when training the model
+          :param model: what model architecture to use.  Must be one of ['generic', 'interpretable']
+          :param lookback:  what multiplier of the forecast size you want to use for your training window
+          :param horizon: how many steps into the future you want your model to predict
+          :param num_generic_neurons: The number of neurons (columns) you want in each Dense layer for the generic block
+          :param num_generic_stacks: How many generic blocks to connect together
+          :param num_generic_layers: Within each generic block, how many dense layers do you want each one to have.  If you set this number to 4, and num_generic_neurons to 128, then you will have 4 Dense layers with 128 neurons in each one
+          :param num_trend_neurons: Number of neurons to place within each Dense layer in each trend block
+          :param num_trend_stacks: number of trend blocks to stack on top of one another
+          :param num_trend_layers: number of Dense layers inside a trend block
+          :param num_seasonal_neurons: size of Dense layer in seasonal block
+          :param num_seasonal_stacks: number of seasonal blocks to stack on top on top of one another
+          :param num_seasonal_layers: number of Dense layers inside a seasonal block
+          :param num_harmonics: seasonal term to use for seasonal stack
+          :param polynomial_term: size of polynomial expansion for trend block
+          :param loss: what loss function to use inside keras.  accepts any regression loss function built into keras.  You can find more info here:  https://keras.io/api/losses/regression_losses/
+          :param learning_rate: learning rate to use when training the model
+          :param batch_size: batch size to use when training the model
         
         :returns: self
         """
@@ -342,19 +343,45 @@ class NBeatsModel():
         self.batch_size           = batch_size
         
     def build_layer(self):
-        """Initializes the Nested NBeats layer from initial parameters"""
+        """
+        Initializes the Nested NBeats layer from initial parameters
+        
+        :attributes model_layer: custom keras layer that contains all of the generic, seasonal and trend layers stacked toger
+        
+        :returns self:
+        
+        """
         self.model_layer = NBeats(**self.__dict__)
         return self
         
     def build_model(self):
-        """Creates keras model to use for fitting"""
+        """
+        Creates keras model to use for fitting
+        
+        :attributes model: keras model that contains NBeats model layers as well as inputs, put into the keras Model class
+        
+        :returns self:
+        
+        """
         inputs     = keras.layers.Input(shape = (self.horizon * self.lookback, ), dtype = 'float')
         forecasts  = self.model_layer(inputs)
         self.model = Model(inputs, forecasts)
         return self
         
     def fit(self, X, y, **kwargs):
-        """Build and fit model"""
+        """
+        Build and fit model
+        
+        inputs:
+          :param X: tensor or numpy array with training windows
+          :param y: tensor or numpy array with the target values to be predicted
+          :param kwargs: any additional arguments you'd like to pass to the base keras model
+          
+          :attribute model_layer: custom keras layer that contains nested Generic, Trend, and Seasonal NBeats blocks
+          :attribute model: keras Model class that connects inputs to the model layer
+          
+        :returns self:  
+        """
         self.build_layer()
         self.build_model()
         self.model.compile(optimizer = keras.optimizers.Adam(self.learning_rate), 
@@ -364,10 +391,27 @@ class NBeatsModel():
         return self
         
     def predict(self, X, **kwargs):
-        """Passes predictions back to original keras layer"""
+        """
+        Passes inputs back to original keras model for prediction
+        
+        inputs:
+          :param X: tensor of numpy array with input data
+          :param kwargs: any additional arguments you'd like to pass to the base keras model
+          
+        :returns: numpy array that contains model predictions for each sample
+        """
         return self.model.predict(X, **kwargs)
     
     
     def evaluate(self, y_true, y_pred, **kwargs):
-        """Passes predicted and true labels back to the original keras model"""
+        """
+        Passes predicted and true labels back to the original keras model
+        
+        inputs:
+            :param y_true: numpy array or tensorflow with true labels
+            :param y_pred: numpy array or tensorflow with predicted labels
+            :param kwargs: any additional arguments you'd like to pass to the base keras model
+        
+        :returns: list with specified evaluation metrics
+        """
         return self.model.evaluate(y_true, y_pred, **kwargs)
