@@ -18,7 +18,9 @@ Installation
 ------------
 kerasbeats can be installed with the following line: 
 
-:code:`pip install keras-beats`
+::
+
+    `pip install keras-beats`
 
 Basic Usage
 -----------
@@ -33,6 +35,7 @@ The N-Beats model architecture assumes that you take a univariate time series an
 If you were predicting one period ahead and wanted to use the previous two values in the time series as input, you want your data to be formatted like this:
 
 ::
+
     # data formatting for N-beats
     # each row represents the previous two values for the currently observed one
     X = [[1, 2],
@@ -48,6 +51,7 @@ The idea here is that :code:`[1, 2]` were the two values that preceded :code:`3`
 Once your input data is formatted like this then you can use :code:`kerasbeats` in the following way:
 
 ::
+
     from kerasbeats import NBeatsModel
     mod = NBeatsModel()
     mod.fit(X, y)
@@ -65,6 +69,7 @@ Univariate Time Series Data
 If you have a single time series, you can use the :code:`prep_time_series` function to get your data in the appropriate format.  It works like this:
 
 ::
+
     from kerasbeats import prep_time_series
     # sample data:  a mock time series with ten values
     time_vals = np.arange(10)
@@ -73,6 +78,7 @@ If you have a single time series, you can use the :code:`prep_time_series` funct
 Once you are done with this the value of :code:`windows` will be the following numpy array:
 
 ::
+
     # training window of 5 values
     array([[0, 1, 2, 3, 4],
            [1, 2, 3, 4, 5],
@@ -83,6 +89,7 @@ Once you are done with this the value of :code:`windows` will be the following n
 The value of `labels` will be the following numpy array:
 
 ::
+
     # the value that followed the preceeding 5
     array([[5],
            [6],
@@ -105,6 +112,7 @@ The value of `labels` will be the following numpy array:
  For example, here's a simple dataset that contains two different time series in a dataframe:
  
  ::
+ 
      import pandas as pd
 
      df = pd.DataFrame()
@@ -117,6 +125,7 @@ The value of `labels` will be the following numpy array:
  This contains two separate time series, one for value :code:`a`, and another for value :code:`b`.  If you want to prep your data so each time series for each label is turned into its corresponding training windows and labels you can use the :code:`prep_multiple_time_series` function:
  
  ::
+ 
      from kerasbeats import prep_multiple_time_series
      windows, labels = prep_multiple_time_series(df, label_col = 'label', data_col = 'value', lookback = 5, horizon = 2)
 
@@ -145,6 +154,7 @@ Likewise, you may want to access some underlying keras functionality that's not 
 However, if you wanted to define your own separate loss functions, or define callbacks, you can access the fully built keras model in the following way:
 
 ::
+
     nbeats = NBeatsModel()
     nbeats.build_layer()
     nbeats.build_model()
@@ -154,8 +164,12 @@ After these two lines, you can access the :code:`model` attribute, which will gi
 So if you wanted to specify a different loss function or optimizer, you could do so easily:
 
 ::
+
     nbeats.model.compile(loss = 'mse',
                          optimizer = tf.keras.optimizers.RMSProp(0.001))
     nbeats.model.fit(windows, labels)
 
-Please note that if you want to use the underlying keras model directly, you should use `nbeats.model.fit()` and not `nbeats.fit`, since it will try and compile the model for you automatically after you call it.
+Please note that if you want to use the underlying keras model directly, you should use :code:`nbeats.model.fit()` and not :code:`nbeats.fit`, since it will try and compile the model for you automatically after you call it.
+
+Potential Sublayer
+##################
