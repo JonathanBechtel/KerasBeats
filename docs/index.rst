@@ -183,7 +183,7 @@ NBeatsModel
 prep_time_series
 ################
 
-.. currentmodule:: utilities
+.. currentmodule:: utilities_doc
 .. autofunction:: prep_time_series
 
 prep_multiple_time_series
