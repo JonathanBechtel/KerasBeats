@@ -11,7 +11,7 @@ The motivation for this project was to take the NBeats model architecture define
 
 To that end, KerasBeats was built with the following ideas in mind:
  - It should reflect the original model architecture as closely as possible.
- - It should have a simple, high level architecture that allows people to get started as quickly as possible using the familar `fit/predict` methods that everyone is already familiar with
+ - It should have a simple, high level architecture that allows people to get started as quickly as possible using the familar :code:`fit/predict` methods that everyone is already familiar with
  - It should allow you to quickly and easily use it as a keras model to take advantage of the libraries existing functionality and enable its use in existing workflows
  
 Installation
@@ -20,7 +20,7 @@ kerasbeats can be installed with the following line:
 
 ::
 
-    `pip install keras-beats`
+    pip install keras-beats
 
 Basic Usage
 -----------
@@ -29,7 +29,7 @@ The N-Beats model architecture assumes that you take a univariate time series an
 
 ::
 
-    # sample time series values!
+    # sample time series values
     time_vals = [1, 2, 3, 4, 5]
 
 If you were predicting one period ahead and wanted to use the previous two values in the time series as input, you want your data to be formatted like this:
@@ -97,21 +97,21 @@ The value of `labels` will be the following numpy array:
            [8],
            [9]])
  
- This method accepts numpy arrays, lists, and pandas Series and DataFrames as input, but they must be one column if they are not then you'll receive an error message.
+This method accepts numpy arrays, lists, and pandas Series and DataFrames as input, but they must be one column if they are not then you'll receive an error message.
  
- The function contains two separate arguments:
+The function contains two separate arguments:
  
   - **horizon:** how far out into the future you want to predict.  A horizon value of 1 means you are predicting one step ahead. A value of two means you are predicting two steps ahead, and so on
   - **lookback:** what multiple of the `horizon` you want to use for training data.  So if `horizon` is 1 and `lookback` is 5, your training window will be the previous 5 values.  If `horizon` is 2 and `lookback` is 5, then your training window will be the previous 10 values.
  
- Multivariate Time Series Data
- -----------------------------
+Multivariate Time Series Data
+-----------------------------
  
- You could conceivably use `kerasbeats` to learn a combination of time series jointly, assuming they shared common patterns between them.  
+You could conceivably use `kerasbeats` to learn a combination of time series jointly, assuming they shared common patterns between them.  
  
- For example, here's a simple dataset that contains two different time series in a dataframe:
+For example, here's a simple dataset that contains two different time series in a dataframe:
  
- ::
+::
  
      import pandas as pd
 
@@ -119,12 +119,12 @@ The value of `labels` will be the following numpy array:
      df['label'] = ['a'] * 10 + ['b'] * 10
      df['value'] = [i for i in range(10)] * 2
  
- :code:`df` would look like this in a jupyter notebook:
- .. image:: https://raw.githubusercontent.com/JonathanBechtel/KerasBeats/main/common/images/sample_df.PNG
+:code:`df` would look like this in a jupyter notebook:
+.. image:: https://raw.githubusercontent.com/JonathanBechtel/KerasBeats/main/common/images/sample_df.PNG
  
- This contains two separate time series, one for value :code:`a`, and another for value :code:`b`.  If you want to prep your data so each time series for each label is turned into its corresponding training windows and labels you can use the :code:`prep_multiple_time_series` function:
+This contains two separate time series, one for value :code:`a`, and another for value :code:`b`.  If you want to prep your data so each time series for each label is turned into its corresponding training windows and labels you can use the :code:`prep_multiple_time_series` function:
  
- ::
+::
  
      from kerasbeats import prep_multiple_time_series
      windows, labels = prep_multiple_time_series(df, label_col = 'label', data_col = 'value', lookback = 5, horizon = 2)
