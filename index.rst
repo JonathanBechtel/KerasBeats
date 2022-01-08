@@ -1,13 +1,13 @@
-# KerasBeats
-----
+KerasBeats
+----------
 An easy, accessible way to use the NBeats model architecture in Keras.
 
 .. image:: https://raw.githubusercontent.com/JonathanBechtel/KerasBeats/main/common/images/nbeats.PNG
 
  **Table of Contents:**
-   - [Introduction](###Introduction)
-   - [Installation](###Installation)
-   - [Basic Usage](###Basic%20Usage)
+   - [Introduction](#Introduction)
+   - [Installation](#Installation)
+   - [Basic Usage](#Basic%Usage)
    - [Data Prep](###Data%20Prep)
    - [KerasBeats layer](###KerasBeats%20layer)
    - [KerasBeats as keras model](###KerasBeats%20as%20keras%20model)
