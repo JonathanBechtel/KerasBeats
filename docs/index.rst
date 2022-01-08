@@ -101,8 +101,8 @@ This method accepts numpy arrays, lists, and pandas Series and DataFrames as inp
  
 The function contains two separate arguments:
  
-  - **horizon:** how far out into the future you want to predict.  A horizon value of 1 means you are predicting one step ahead. A value of two means you are predicting two steps ahead, and so on
-  - **lookback:** what multiple of the `horizon` you want to use for training data.  So if `horizon` is 1 and `lookback` is 5, your training window will be the previous 5 values.  If `horizon` is 2 and `lookback` is 5, then your training window will be the previous 10 values.
+ - **horizon:** how far out into the future you want to predict.  A horizon value of 1 means you are predicting one step ahead. A value of two means you are predicting two steps ahead, and so on
+ - **lookback:** what multiple of the `horizon` you want to use for training data.  So if `horizon` is 1 and `lookback` is 5, your training window will be the previous 5 values.  If `horizon` is 2 and `lookback` is 5, then your training window will be the previous 10 values.
  
 Multivariate Time Series Data
 -----------------------------
